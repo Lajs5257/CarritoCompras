@@ -3,11 +3,8 @@ const carrito = document.querySelector('#carrito');
 const listaCursos = document.querySelector('#lista-cursos');
 const contenedorCarrito = document.querySelector('#lista-carrito tbody');
 const btnVaciarCarrito = document.querySelector('#vaciar-carrito');
-<<<<<<< HEAD
 let articulosCarrito = [];
 
-=======
->>>>>>> 41d7e9390513bb1afb748cc515d56a939a2da836
 
 cargarEventListener();
 function cargarEventListener(){
@@ -36,7 +33,6 @@ function obtenDatosCurso(curso){
         cantidad: 1
         }
     console.log(infoCurso);
-<<<<<<< HEAD
     
     //Revisamos si ya existe
     const existe = articulosCarrito.some( curso => curso.id === infoCurso.id);
@@ -92,6 +88,4 @@ function limpiarCarrito() {
     while(contenedorCarrito.firstChild) {
         contenedorCarrito.removeChild(contenedorCarrito.firstChild);
     }
-=======
->>>>>>> 41d7e9390513bb1afb748cc515d56a939a2da836
 }
