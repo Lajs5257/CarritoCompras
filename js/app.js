@@ -9,6 +9,12 @@ let articulosCarrito = [];
 cargarEventListener();
 function cargarEventListener(){
     //Eventos
+    // En cuanto carga
+    document.addEventListener('DOMContentLoaded',() => {
+        articulosCarrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        console.log('1');
+        carritoHTML();
+    })
     //Agregar al carrito
     listaCursos.addEventListener('click', agregarCurso);
     //Eliminar curso
@@ -17,6 +23,7 @@ function cargarEventListener(){
     btnVaciarCarrito.addEventListener('click', () => {
         limpiarCarrito(); //Quitamos el HTML
         articulosCarrito = []; // Reiniciamos el arreglo
+        sincronizarStorage(); //Volvemos a actualizar el storage
     })
 }
 
@@ -31,7 +38,6 @@ function agregarCurso(e){
 }
 
 function obtenDatosCurso(curso){
-    console.log(curso);
     //curso
     const infoCurso = {
         imagen: curso.querySelector('img').src,
@@ -40,8 +46,6 @@ function obtenDatosCurso(curso){
         id: curso.querySelector('a').getAttribute('data-id'),
         cantidad: 1
         }
-    console.log(infoCurso);
-    
     //Revisamos si ya existe
     const existe = articulosCarrito.some( curso => curso.id === infoCurso.id);
     if(existe){
@@ -59,7 +63,6 @@ function obtenDatosCurso(curso){
         articulosCarrito = [...articulosCarrito, infoCurso];
     }
     carritoHTML();
-    console.log(articulosCarrito);
 }
 
 //Mostrar carrito
@@ -68,26 +71,33 @@ function carritoHTML() {
     limpiarCarrito();
 
     //Recorremos el carrito y generamos el html
-    articulosCarrito.forEach(curso => {
-        const {imagen, titulo, precio, cantidad, id} = curso;
-        const row = document.createElement('tr');
-        row.innerHTML=`
-        <td>
-            <img src="${imagen}" width="120">
-        </td>    
-        <td>${titulo}</td>
-        <td>${precio}</td>
-        <td>${cantidad}</td>
-        <td>
-            <a href="#" class="borrar-curso" data-id="${id}"> X </a>
-        </td>
-        `;
-        
-        // Agregamos al tbody
-        contenedorCarrito.appendChild(row);
-    });
+    if(articulosCarrito.length>0){
+        articulosCarrito.forEach(curso => {
+            const {imagen, titulo, precio, cantidad, id} = curso;
+            const row = document.createElement('tr');
+            row.innerHTML=`
+            <td>
+                <img src="${imagen}" width="120">
+            </td>    
+            <td>${titulo}</td>
+            <td>${precio}</td>
+            <td>${cantidad}</td>
+            <td>
+                <a href="#" class="borrar-curso" data-id="${id}"> X </a>
+            </td>
+            `;
+            
+            // Agregamos al tbody
+            contenedorCarrito.appendChild(row);
+        });
+    }
+    //Sincronizamos con storage
+    sincronizarStorage();
 }
-
+//Lo guardamos en storage
+function sincronizarStorage() {
+    localStorage.setItem('carrito',JSON.stringify(articulosCarrito));
+}
 //Limpiamos carrito
 function limpiarCarrito() {
     /*
